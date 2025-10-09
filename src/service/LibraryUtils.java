@@ -173,12 +173,15 @@ public class LibraryUtils {
             }
             User user = Library.users.get(userID);
             Book book = Library.books.get(bookID);
+            if (book.getAvailableCopies() == 0) {
+                throw new BookNotAvailableCopies(book.getTitle(), book.getAvailableCopies());
+            }
             //добавлем в список текущих выдач
             user.addLoan(new Loan(bookID, userID, loanDate));
             System.out.printf("Книга %s  выдана \n", book.getTitle());
             user.displayLoan();
 
-        } catch (UserNotFoundByID | BookNotFoundByID | IllegalArgumentException e) {
+        } catch (UserNotFoundByID | BookNotFoundByID | IllegalArgumentException | BookNotAvailableCopies e) {
             System.out.println(e.getMessage());
         }
     }
