@@ -13,8 +13,8 @@ import static service.Library.users;
 
 // Метод Консольное Меню
 public class ConsoleMenu {
+    private static final Scanner scanner = new Scanner(System.in);
     public static void start() {
-        Scanner scanner = new Scanner(System.in);
         int choice = -1;
         while (choice != 0) {
             displayMenu();
@@ -193,7 +193,7 @@ public class ConsoleMenu {
             try {
                 userID = Integer.parseInt(input("введите ID читателя:"));
             } catch (NumberFormatException e) {
-                throw new Exception("Не введено значение id читателя. Поиск прекращен");
+                throw new Exception("Введен некорректный id читателя. Поиск прекращен");
             }
             System.out.println("Подсказка: поиск книги может производится по одному или нескольким параметрам. Если поиск по параметру не нужен, просто нажмите ENTER");
             title = input("введите название книги (пропустить - нажмите ENTER):");
@@ -240,8 +240,8 @@ public class ConsoleMenu {
     // метод для ввода в консоли
     public static String input(String prompt) {
         System.out.print(prompt);
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+        Scanner scannerIn = new Scanner(System.in);
+        return scannerIn.nextLine();
     }
 
     //вводим значения ID читателя и ищет выданные книги
