@@ -11,22 +11,38 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class Library {
-    // мап списки книги. ключ - UserID
+    /**
+     * мап списки книги. ключ - UserID
+    */
     public static HashMap<Integer, Book> books = new HashMap<>();
-    // мап списки читателей. ключ - BookID
+
+    /**
+     * мап списки читателей. ключ - BookID
+     */
     public static HashMap<Integer, User> users = new HashMap<>();
-    // мап списки выданных книг. ключ - UserID, значения - другой мап (ключ - BookID, значение - количество книг на руках)
-    //public static HashMap<Integer, HashMap<Integer, Integer>> lendingBooks = new HashMap<>();
-    //файл scv книг с исходными данными
+
+    /**
+     * файл scv книг с исходными данными
+     */
     public static String csvFileBook = "src/resources/books.csv";
-    //файл scv книг с исходными данными
+
+    /**
+     * файл scv книг с исходными данными
+     */
     public static String csvFileUser = "src/resources/users.csv";
 
+    /**
+     * список выданных за все время книг
+     */
     public static List<Loan> loans = new ArrayList<>();
 
-    //метод инициализации начальных значений. загружаем из csv файлов src/service/books.csv и src/service/users.csv
+    /**
+     * метод инициализации начальных значений. загружаем из csv файлов src/service/books.csv и src/service/users.csv
+     */
+
     public static void init() {
         loadBooksFromFile();
         loadUsersFromFile();
@@ -37,8 +53,9 @@ public class Library {
 
     }
 
-
-    // метод загружает из csv файла в мап books
+    /**
+     * метод загружает из csv файла в мап books
+     */
     private static void loadBooksFromFile() {
         books.clear();
         String line;
@@ -53,7 +70,9 @@ public class Library {
         }
     }
 
-    // метод загружает из csv файла в мап users
+    /**
+     * метод загружает из csv файла в мап users
+     */
     private static void loadUsersFromFile() {
         users.clear();
         String line;

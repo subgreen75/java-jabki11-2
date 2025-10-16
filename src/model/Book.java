@@ -12,9 +12,7 @@ public class Book {
 
 
     public Book(String title, String author, int year, int totalCopies) {
-        if (title == null || author == null || title.isBlank() || author.isBlank() || year < 0 || totalCopies < 0) {
-            throw new IllegalArgumentException("Некорректное значение атрибутов книги");
-        }
+        validateBook(title, author, year, totalCopies);
         this.title = title;
         this.author = author;
         this.year = year;
@@ -43,7 +41,6 @@ public class Book {
         return this.totalCopies;
     }
 
-
     private int nextId() {
         return startId++;
     }
@@ -60,9 +57,15 @@ public class Book {
         this.totalCopies = totalCopies;
     }
 
-    //выводит в консоль информацию о книге
+    private void validateBook(String title, String author, int year, int totalCopies) {
+        if (title == null || author == null || title.isBlank() || author.isBlank() || year < 0 || totalCopies < 0) {
+            throw new IllegalArgumentException("Некорректное значение атрибутов книги");
+        }
+    }
+    /**
+     *выводит в консоль информацию о книге
+     */
     public void displayBook() {
         System.out.printf("ID: %d, Название: %s, Автор: %s, Год издания: %d, Всего копий: %d, В наличии %d\n", this.getId(), this.getTitle(), this.getAuthor(), this.getYear(), this.getTotalCopies(), this.getAvailableCopies());
     }
-
 }

@@ -17,14 +17,15 @@ import java.util.Map;
 
 
 public class LibraryUtils {
-    // метод добавляет книгу в мап books
-    // saveToFileFlag - записывать или нет в файл новую книгу. по умолчанию (при загрузке из файле не перезаписываем)
+    /**
+      метод добавляет книгу в мап books
+      saveToFileFlag - записывать или нет в файл новую книгу. по умолчанию (при загрузке из файле не перезаписываем)
+    */
     public static void addBook(String title, String author, int year, int totalCopies, boolean saveToFileFlag) {
         Book book = new Book(title, author, year, totalCopies);
-        Boolean existsBookFlag = false;
         HashMap<Integer, Book> findBooks;
         findBooks = LibraryUtils.getBooks(0, title, author, year);
-        if (findBooks.size() == 0) {
+        if (findBooks.isEmpty()) {
             // если не нашли - то добавляем
             Library.books.put(book.getId(), book);
             if (saveToFileFlag) {
@@ -48,8 +49,10 @@ public class LibraryUtils {
 
     }
 
-    // метод добавляет книгу в мап users
-    // saveToFileFlag - записывать или нет в файл новую книгу. по умолчанию (при загрузке из файле не перезаписываем)
+    /**
+     * метод добавляет книгу в мап users
+     * saveToFileFlag - записывать или нет в файл новую книгу. по умолчанию (при загрузке из файле не перезаписываем)
+     */
     public static void addUser(String name, String email, boolean saveToFileFlag) {
         User user = new User(name, email);
         Library.users.put(user.getId(), user);
@@ -131,11 +134,7 @@ public class LibraryUtils {
             //увеливаем доступное кол-во книг в мапе books
             Library.books.get(bookID).setAvailableCopies(Library.books.get(bookID).getAvailableCopies() + 1);
             System.out.printf("Книга %s, вернули\n", Library.books.get(bookID).getTitle());
-        } catch (UserNotFoundByID e) {
-            System.out.println(e.getMessage());
-        } catch (BookNotFoundByID e) {
-            System.out.println(e.getMessage());
-        } catch (LendingNotFoundByUserID e) {
+        } catch (UserNotFoundByID | BookNotFoundByID | LendingNotFoundByUserID e) {
             System.out.println(e.getMessage());
         }
     }
@@ -201,38 +200,37 @@ public class LibraryUtils {
     //история выдачи книг
     public static void displayAllLoans() {
         System.out.println("История выдачи книг:");
-        for (Loan loan_hist : Library.loans) {
-            loan_hist.displayLoan();
-        }
+        Library.loans.stream()
+                .forEach(loan -> loan.displayLoan());
     }
 
     //история выдачи книг по пользователю
     public static void displayAllLoansByUserID(int userID) {
         System.out.printf("История выдачи книг по пользователю %s:\n", getUserNameById(userID));
-        for (Loan loan_hist : Library.loans) {
-            if (loan_hist.getUserId() == userID) {
-                loan_hist.displayLoan();
-            }
-        }
+        Library.loans.stream()
+                .filter(loan -> loan.getUserId() == userID)
+                .forEach(loan -> loan.displayLoan());
     }
 
-    //история выдачи книг по книге
+    /**
+     * история выдачи книг по книге
+     * @param bookID - ID книги
+     */
     public static void displayAllLoansByBookID(int bookID) {
         System.out.printf("История выдачи книг по книге %s:\n", getBookTitleById(bookID));
-        for (Loan loan_hist : Library.loans) {
-            if (loan_hist.getBookId() == bookID) {
-                loan_hist.displayLoan();
-            }
-        }
+        Library.loans.stream()
+                .filter(loan -> loan.getBookId() == bookID)
+                .forEach(loan -> loan.displayLoan());
     }
 
-    //история просроченных  книг
+    /**
+     * история просроченных  книг
+     * @param daysOverdue - число дней просрочки
+     */
     public static void displayAllLoansOverdue(int daysOverdue) {
         System.out.printf("Просроченные книги за %s дн.:\n", daysOverdue);
-        for (Loan loan_hist : Library.loans) {
-            if (loan_hist.getReturnDate() == null && ChronoUnit.DAYS.between(loan_hist.getLoanDate(), LocalDate.now())  >= daysOverdue) {
-                loan_hist.displayLoan();
-            }
-        }
+        Library.loans.stream()
+                .filter(loan -> loan.getReturnDate() == null && ChronoUnit.DAYS.between(loan.getLoanDate(), LocalDate.now())  >= daysOverdue)
+                .forEach(loan -> loan.displayLoan());
     }
 }
